@@ -9,8 +9,8 @@ Kalendermonat. Die Monatsgrenze ist der gleiche Kalendertag des Vormonats ab lok
 bei kürzerem Vormonat auf dessen letzten Tag gekürzt.
 
 Quellenrecherche, manueller Datenimport, validierter JSON-Bestand und lokales
-Archiv und statische Website sind implementiert. Automatische Aktualisierung
-und Deployment sind noch nicht eingerichtet.
+Archiv und statische Website sind implementiert. GitHub-Pages-Deployment von
+`main` ist eingerichtet. Ein täglicher automatischer Datenabruf fehlt noch.
 `PLAN.md` beschreibt die Phasen und ihren Fortschritt;
 `docs/phase-1-datenquelle.md` enthält die belegten Erkenntnisse zur Quelle.
 Geplante Komponenten nicht als bereits vorhanden beschreiben.
@@ -29,11 +29,14 @@ Geplante Komponenten nicht als bereits vorhanden beschreiben.
 | `data/appointments.json`, `data/status.json` | Erzeugter Terminbestand und separater Abrufstatus |
 | `docs/phase-2-import.md` | Datenformat, Bedienung und Fehler-/Archivregeln |
 | `docs/phase-3-website.md` | Website-Verhalten und Browserprüfung |
+| `.github/workflows/pages.yml` | Test, Paketierung und Pages-Deployment von `main` |
+| `blutspenden/build_site.py` | Paketiert ausschließlich öffentliche Website-Dateien |
+| `docs/github-pages.md` | Veröffentlichungsablauf und aktueller Datenstand |
 | `.gitignore` | Vorlage mit Jekyll-/GitHub-Pages-Einträgen |
 
 Die `.gitignore` allein belegt keinen Jekyll- oder Ruby-Stack. Es gibt derzeit
 keinen `Gemfile`, kein `package.json`, keine Python-Abhängigkeitsdatei, keinen
-Lockfile und keine CI-Konfiguration unter `.github/workflows/`.
+Lockfile. Die Pages-CI liegt unter `.github/workflows/pages.yml`.
 
 ## Tech-Stack
 
@@ -46,8 +49,8 @@ Lockfile und keine CI-Konfiguration unter `.github/workflows/`.
   `assets/model.mjs` enthält reine Datenlogik, `assets/app.js` das DOM-Rendering.
   Node.js 18+ führt die JavaScript-Tests ohne npm-Abhängigkeiten aus.
 - Optional für Browserprüfungen: Python Playwright und System-Chromium.
-- Der Python-Importer liefert JSON. Automatische Aktualisierung und Veröffentlichung
-  über GitHub Actions sind noch geplant.
+- Der Python-Importer liefert JSON. GitHub Actions veröffentlicht den gespeicherten
+  Stand von `main`; täglicher Quellabruf und Archiv-Commit sind noch geplant.
 - Zusätzliche Frameworks oder Paketmanager nur einführen, wenn die konkrete
   Aufgabe sie benötigt. Bei neuen Abhängigkeiten Installation dokumentieren.
 
@@ -93,7 +96,18 @@ Der zweite Befehl prüft die JavaScript-Datenlogik, der dritte optional die Webs
 mit Python Playwright und einem `chromium`/`chromium-browser` im PATH. Fehlende
 Browser-Voraussetzungen führen zu expliziten Skips; diese nicht als bestanden
 melden. Python-Test-Discovery führt die Browserfälle ebenfalls aus, wenn verfügbar.
-Kein `pytest`, npm, Bundler, Linter oder Deployment-Befehl ist eingerichtet.
+Kein `pytest`, npm oder Bundler ist eingerichtet. Pages wird über den Workflow auf
+`main` veröffentlicht; Details in `docs/github-pages.md`. Paketierung separat prüfen:
+
+```sh
+python3 -m blutspenden.build_site --output-dir /tmp/blutspenden-pages-site
+```
+
+Das Ziel muss leer oder neu und außerhalb des Repositorys sein. Der Workflow
+veröffentlicht nur das Paket, niemals das gesamte Repository. Build-Job nur mit
+Leserechten; Pages-/OIDC-Schreibrechte auf den Deployment-Job begrenzen. Bestehende
+Branch-Beschränkungen der Pages-Umgebung erhalten. Reine Dokumentationsänderungen
+lösen keine Bereitstellung aus.
 Bei Website-Änderungen JavaScript- und Browserprüfungen ausführen, insbesondere
 Datenfehler, mobile Ansichten, Tastatur und den Projekt-Unterpfad prüfen.
 Öffentliche Termindaten als untrusted behandeln: DOM über `textContent` erstellen,

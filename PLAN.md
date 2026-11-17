@@ -59,6 +59,7 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 - [x] Prüfstatus „unklar“ für verschwundene Termine samt Link zur offiziellen Detailseite und alternativer Stadtsuche anzeigen; explizite Absagen beibehalten.
 - [x] Unabhängige Übersicht klar kennzeichnen und auf das Rote Kreuz als maßgebliche Quelle verweisen.
 - [x] Tastaturbedienung, verständliche Beschriftungen und ausreichende Kontraste berücksichtigen.
+- [ ] Einen gut sichtbaren externen Link „Voraussetzungen für eine Blutspende“ im oberen Seitenbereich ergänzen. Auf die offizielle Seite des Österreichischen Roten Kreuzes mit den aktuellen Spendevoraussetzungen verweisen; Zielseite vor Einbau prüfen. Den Link als extern kennzeichnen und per Tastatur sowie mobil gut erreichbar gestalten. Medizinische Voraussetzungen nicht als eigene, möglicherweise veraltete Liste übernehmen.
 
 **Abnahme:** Beide Städte und Terminbereiche sind auf Smartphone und Desktop verständlich nutzbar; alle relevanten Datenzustände werden korrekt angezeigt.
 
@@ -68,12 +69,14 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 
 - [ ] GitHub Actions für täglichen sowie manuellen Datenabruf einrichten.
 - [ ] Persistierung des Archivs über Workflow-Läufe hinweg festlegen und umsetzen.
-- [ ] Validierung und Veröffentlichung über GitHub Pages einrichten.
+- [x] Validierung und Veröffentlichung über GitHub Pages einrichten (Workflow auf `main`, erste Bereitstellung erfolgreich).
 - [ ] Bei Abruffehlern den letzten gültigen Terminbestand erhalten und den Fehler sichtbar machen.
-- [ ] Erforderliche Workflow-Berechtigungen auf das notwendige Maß begrenzen.
-- [ ] Pfade unter dem GitHub-Pages-Projektpfad `/Blutspenden-overview/` prüfen.
+- [x] Erforderliche Workflow-Berechtigungen auf das notwendige Maß begrenzen.
+- [x] Pfade unter dem GitHub-Pages-Projektpfad `/Blutspenden-overview/` prüfen (lokales Paket und öffentliche Seite).
 
 **Abnahme:** Manueller Workflow und Veröffentlichung funktionieren; Aktualisierungsfehler werden nicht als „keine Termine“ ausgegeben. Die tägliche Ausführung ist konfiguriert.
+
+**Stand 17.11.2026:** Erste Website auf [GitHub Pages](https://alexwiel.github.io/Blutspenden-overview/) veröffentlicht, Workflow-Lauf `44063278468` erfolgreich. Deployment erfolgt von `main` mit minimalen Rechten und einem Paket aus ausschließlich öffentlichen Dateien. Ein täglicher Datenabruf und die automatische Archivpersistierung fehlen noch; ein manueller Deployment-Lauf ruft keine neuen Termine ab. Siehe [Deployment-Dokumentation](docs/github-pages.md).
 
 ### 5. Funktion und Datenqualität prüfen
 
@@ -91,7 +94,7 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 - [ ] README um lokalen Start, Datenabruf, Tests und Deployment ergänzen.
 - [ ] Datenquelle, Aktualisierungsrhythmus, Archivgrenze und Fehlerverhalten dokumentieren.
 - [ ] Erforderliche GitHub-Pages-Einstellungen und gegebenenfalls externe Voraussetzungen beschreiben.
-- [ ] Erste Version veröffentlichen und die tatsächlich veröffentlichte Seite prüfen.
+- [x] Erste Version veröffentlichen und die tatsächlich veröffentlichte Seite prüfen (GitHub Pages, 17.11.2026).
 - [ ] Verifizierte Ergebnisse und verbleibende Einschränkungen festhalten.
 
 **Fertig, wenn:** Beide Städte korrekt dargestellt werden, die automatische Aktualisierung und Veröffentlichung funktionieren, der Datenstatus erkennbar ist und der Entwicklungsablauf dokumentiert ist.
@@ -103,4 +106,5 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 - `termine.blut.at` ist inzwischen erreichbar und laut aktuellem Umgebungsstatus freigegeben. Bei dieser Recherche wurde keine Umgebungskonfiguration geändert und keine Umgebung veröffentlicht.
 - Phase 2: manueller Import, JSON-Validierung, Dublettenerkennung, Archiv und separater Abrufstatus implementiert und geprüft. Erster Archivaufbau ab 17.11.2026; kein vollständiger anfänglicher Rückblickmonat.
 - Phase 3: Website implementiert und lokal geprüft.
-- Phase 4–6: automatische Aktualisierung und Veröffentlichung noch offen. Die Nutzungsgrundlage vor öffentlichem Betrieb bleibt zu klären.
+- Phase 4 teilweise erledigt: Pages-Veröffentlichung von `main` eingerichtet und erste Version live; täglicher Datenabruf und automatische Archivpersistierung noch offen.
+- Phase 5–6: verbleibende Gesamtvalidierung und Abschlussdokumentation offen. Die Nutzungsgrundlage vor öffentlichem Betrieb bleibt zu klären.

@@ -1,9 +1,10 @@
 # Blutspenden-overview
 
-Geplante GitHub-Pages-Übersicht über Blutspendetermine des Österreichischen Roten
+GitHub-Pages-Übersicht über Blutspendetermine des Österreichischen Roten
 Kreuzes in Klagenfurt am Wörthersee und Tamsweg, einschließlich eines monatlichen
 Rückblicks. Datenimport, lokales Archiv und responsive Website sind implementiert.
-Die automatische Aktualisierung und Veröffentlichung sind noch nicht eingerichtet.
+Die Website ist veröffentlicht: https://alexwiel.github.io/Blutspenden-overview/
+Ein täglicher automatischer Datenabruf ist noch nicht eingerichtet.
 
 ## Voraussetzungen und Datenimport
 
@@ -76,6 +77,13 @@ python3 scripts/probe_source.py
 ```
 
 Ein zusätzlicher Build-Schritt ist für die statische Website nicht nötig.
+
+## Veröffentlichung
+
+Änderungen an Website oder Daten auf `main` werden nach erfolgreichen Tests über
+GitHub Actions veröffentlicht. Ein manueller Lauf ist ebenfalls möglich. Dabei
+wird der gespeicherte Datenstand veröffentlicht; neue Termine werden noch nicht
+automatisch abgerufen. Details: [GitHub Pages](docs/github-pages.md).
 
 ## Dokumentation
 
