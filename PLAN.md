@@ -50,17 +50,19 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 
 ### 3. Übersichtliche Website erstellen
 
-- [ ] Responsive Grundstruktur mit HTML, CSS und JavaScript erstellen.
-- [ ] Filter für „Beide Städte“, „Klagenfurt“ und „Tamsweg“ ergänzen.
-- [ ] Kommende und laufende Termine chronologisch darstellen und den nächsten Termin hervorheben.
-- [ ] Beendete Termine im Rückblickzeitraum getrennt anzeigen.
-- [ ] Datum, Uhrzeit, Veranstaltungsort, Adresse und offiziellen Quellenlink lesbar darstellen.
-- [ ] Letzte erfolgreiche Aktualisierung sowie Hinweise auf veraltete Daten, Ladefehler und leere Trefferlisten anzeigen.
-- [ ] Prüfstatus „unklar“ für verschwundene Termine samt Link zur offiziellen Detailseite und alternativer Stadtsuche anzeigen; explizite Absagen beibehalten.
-- [ ] Unabhängige Übersicht klar kennzeichnen und auf das Rote Kreuz als maßgebliche Quelle verweisen.
-- [ ] Tastaturbedienung, verständliche Beschriftungen und ausreichende Kontraste berücksichtigen.
+- [x] Responsive Grundstruktur mit HTML, CSS und JavaScript erstellen.
+- [x] Filter für „Beide Städte“, „Klagenfurt“ und „Tamsweg“ ergänzen.
+- [x] Kommende und laufende Termine chronologisch darstellen und den nächsten Termin hervorheben.
+- [x] Beendete Termine im Rückblickzeitraum getrennt anzeigen.
+- [x] Datum, Uhrzeit, Veranstaltungsort, Adresse und offiziellen Quellenlink lesbar darstellen.
+- [x] Letzte erfolgreiche Aktualisierung sowie Hinweise auf veraltete Daten, Ladefehler und leere Trefferlisten anzeigen.
+- [x] Prüfstatus „unklar“ für verschwundene Termine samt Link zur offiziellen Detailseite und alternativer Stadtsuche anzeigen; explizite Absagen beibehalten.
+- [x] Unabhängige Übersicht klar kennzeichnen und auf das Rote Kreuz als maßgebliche Quelle verweisen.
+- [x] Tastaturbedienung, verständliche Beschriftungen und ausreichende Kontraste berücksichtigen.
 
 **Abnahme:** Beide Städte und Terminbereiche sind auf Smartphone und Desktop verständlich nutzbar; alle relevanten Datenzustände werden korrekt angezeigt.
+
+**Stand 17.11.2026:** Phase 3 parallel umgesetzt: statische Website ohne Build, Filter, laufende/kommende Termine, Monatsrückblick, sichere Prüflinks und Fehler-/Veraltungshinweise. 19 JavaScript-Tests und 11 Chromium-Browserprüfungen bestanden (keine übersprungen); mobile Breiten 320/390/768 px, Tastatur und Pages-Unterpfad geprüft. Anzeige des echten gespeicherten Bestands: 6 Termine (5 Klagenfurt, 1 Tamsweg). Weitere Details: [Phase-3-Dokumentation](docs/phase-3-website.md). Keine Veröffentlichung durchgeführt.
 
 ### 4. Aktualisierung und GitHub Pages automatisieren
 
@@ -100,4 +102,5 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 - Phase 1: Recherche und technische Abnahme durchgeführt; beide Städte erfolgreich abgerufen. Offene Nutzungsgrundlage und Quellenlimits siehe [Rechercheprotokoll](docs/phase-1-datenquelle.md).
 - `termine.blut.at` ist inzwischen erreichbar und laut aktuellem Umgebungsstatus freigegeben. Bei dieser Recherche wurde keine Umgebungskonfiguration geändert und keine Umgebung veröffentlicht.
 - Phase 2: manueller Import, JSON-Validierung, Dublettenerkennung, Archiv und separater Abrufstatus implementiert und geprüft. Erster Archivaufbau ab 17.11.2026; kein vollständiger anfänglicher Rückblickmonat.
-- Phase 3–6: Website, automatische Aktualisierung und Veröffentlichung noch offen. Die Nutzungsgrundlage vor öffentlichem Betrieb bleibt zu klären.
+- Phase 3: Website implementiert und lokal geprüft.
+- Phase 4–6: automatische Aktualisierung und Veröffentlichung noch offen. Die Nutzungsgrundlage vor öffentlichem Betrieb bleibt zu klären.

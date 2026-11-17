@@ -9,7 +9,8 @@ Kalendermonat. Die Monatsgrenze ist der gleiche Kalendertag des Vormonats ab lok
 bei kürzerem Vormonat auf dessen letzten Tag gekürzt.
 
 Quellenrecherche, manueller Datenimport, validierter JSON-Bestand und lokales
-Archiv sind implementiert. Website und Deployment sind noch nicht implementiert.
+Archiv und statische Website sind implementiert. Automatische Aktualisierung
+und Deployment sind noch nicht eingerichtet.
 `PLAN.md` beschreibt die Phasen und ihren Fortschritt;
 `docs/phase-1-datenquelle.md` enthält die belegten Erkenntnisse zur Quelle.
 Geplante Komponenten nicht als bereits vorhanden beschreiben.
@@ -18,7 +19,8 @@ Geplante Komponenten nicht als bereits vorhanden beschreiben.
 
 | Pfad | Inhalt |
 | --- | --- |
-| `README.md` | Kurze Projektbeschreibung |
+| `README.md` | Projektbeschreibung, Start- und Testbefehle |
+| `index.html`, `assets/` | Statische Website, Gestaltung, DOM-Rendering und Datums-/Filterlogik |
 | `PLAN.md` | Aufgaben, Abnahmekriterien, Entscheidungen und offene Punkte |
 | `docs/phase-1-datenquelle.md` | Quellenprüfung, Beispieltermine und bekannte Grenzen |
 | `scripts/probe_source.py` | Manueller Phase-1-Live-Check der öffentlichen Quelle |
@@ -26,6 +28,7 @@ Geplante Komponenten nicht als bereits vorhanden beschreiben.
 | `tests/` | Offline-Tests mit `unittest` |
 | `data/appointments.json`, `data/status.json` | Erzeugter Terminbestand und separater Abrufstatus |
 | `docs/phase-2-import.md` | Datenformat, Bedienung und Fehler-/Archivregeln |
+| `docs/phase-3-website.md` | Website-Verhalten und Browserprüfung |
 | `.gitignore` | Vorlage mit Jekyll-/GitHub-Pages-Einträgen |
 
 Die `.gitignore` allein belegt keinen Jekyll- oder Ruby-Stack. Es gibt derzeit
@@ -39,9 +42,12 @@ Lockfile und keine CI-Konfiguration unter `.github/workflows/`.
 - Die CLI verwendet `fcntl` für die Schreibsperre und setzt Linux/Unix voraus.
 - `zoneinfo` setzt Python 3.9 oder neuer sowie verfügbare IANA-Zeitzonendaten
   für `Europe/Vienna` voraus. Eine Python-Version ist im Repository nicht gepinnt.
-- Geplant: HTML, CSS und JavaScript ohne Framework; der vorhandene Python-Importer liefert
-  JSON. Automatische Aktualisierung und Veröffentlichung über GitHub Actions
-  sind noch geplant.
+- Website: HTML, CSS und JavaScript-Module ohne Framework oder Build-Schritt;
+  `assets/model.mjs` enthält reine Datenlogik, `assets/app.js` das DOM-Rendering.
+  Node.js 18+ führt die JavaScript-Tests ohne npm-Abhängigkeiten aus.
+- Optional für Browserprüfungen: Python Playwright und System-Chromium.
+- Der Python-Importer liefert JSON. Automatische Aktualisierung und Veröffentlichung
+  über GitHub Actions sind noch geplant.
 - Zusätzliche Frameworks oder Paketmanager nur einführen, wenn die konkrete
   Aufgabe sie benötigt. Bei neuen Abhängigkeiten Installation dokumentieren.
 
@@ -75,9 +81,26 @@ git diff --check
 ```
 
 Diesen lokalen Check für Whitespace-Fehler vor Abschluss von Änderungen verwenden.
-Es gibt derzeit keinen Website-Build, Entwicklungsserver, Linter oder Deployment-
-Befehl. Der vorhandene Test-Runner ist `unittest`; kein `pytest`, `npm` oder Bundler
-ist eingerichtet. Reine Dokumentationsänderungen erfordern keinen Live-Abruf.
+Die statische Website benötigt keinen Build-Schritt. Entwicklungsserver:
+
+```sh
+python3 -m http.server 8000 --bind 0.0.0.0
+node --test tests/test_web_model.mjs
+python3 -m unittest discover -s tests -p 'test_web_browser.py' -v
+```
+
+Der zweite Befehl prüft die JavaScript-Datenlogik, der dritte optional die Website
+mit Python Playwright und einem `chromium`/`chromium-browser` im PATH. Fehlende
+Browser-Voraussetzungen führen zu expliziten Skips; diese nicht als bestanden
+melden. Python-Test-Discovery führt die Browserfälle ebenfalls aus, wenn verfügbar.
+Kein `pytest`, npm, Bundler, Linter oder Deployment-Befehl ist eingerichtet.
+Bei Website-Änderungen JavaScript- und Browserprüfungen ausführen, insbesondere
+Datenfehler, mobile Ansichten, Tastatur und den Projekt-Unterpfad prüfen.
+Öffentliche Termindaten als untrusted behandeln: DOM über `textContent` erstellen,
+Quelllinks validieren, keine ungeprüften HTML-Fragmente einfügen. Alle Asset- und
+JSON-Pfade relativ halten; Browserdatenzustände dürfen keine echten Nulltreffer
+vortäuschen. Unklare und abgesagte Termine nicht als nächsten Termin hervorheben.
+Reine Dokumentationsänderungen erfordern keinen Live-Abruf.
 Bei Änderungen am Importer die relevanten Offline-Tests ausführen und bei Änderungen
 an Quellabruf oder Kalendernormalisierung zusätzlich einen Live-Import, sofern der
 Netzwerkzugriff besteht. Ergebnis oder konkreten Blocker berichten. Für Fehlerfälle
