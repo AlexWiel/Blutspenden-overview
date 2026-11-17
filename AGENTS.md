@@ -32,6 +32,7 @@ Geplante Komponenten nicht als bereits vorhanden beschreiben.
 | `.github/workflows/pages.yml` | Test, Paketierung und Pages-Deployment von `main` |
 | `blutspenden/build_site.py` | Paketiert ausschließlich öffentliche Website-Dateien |
 | `docs/github-pages.md` | Veröffentlichungsablauf und aktueller Datenstand |
+| `docs/phase-5-pruefung.md`, `docs/phase-6-abschluss.md` | Gesamtprüfung, Abschluss und verbleibende Grenzen |
 | `.gitignore` | Vorlage mit Jekyll-/GitHub-Pages-Einträgen |
 
 Die `.gitignore` allein belegt keinen Jekyll- oder Ruby-Stack. Es gibt derzeit

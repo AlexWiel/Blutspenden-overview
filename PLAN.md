@@ -82,24 +82,28 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 
 ### 5. Funktion und Datenqualität prüfen
 
-- [ ] Tests für Stadtfilter, Dubletten, Aktualisierungen und Archivaufbewahrung ausführen.
-- [ ] Datumsgrenzen einschließlich Monatsende, Sommerzeit, laufender Termine und fehlender Endzeit prüfen.
-- [ ] Fehlerhafte Antworten, Netzwerkausfälle und erfolgreiche Antworten ohne Termine prüfen.
-- [ ] Angezeigte Termine für beide Städte mit der offiziellen Quelle vergleichen.
-- [ ] Mobile Darstellung und Tastaturbedienung prüfen.
-- [ ] Ausgelieferte Website einschließlich JSON-Datei und Quellenlinks unter dem Pages-Projektpfad prüfen.
+- [x] Tests für Stadtfilter, Dubletten, Aktualisierungen und Archivaufbewahrung ausführen.
+- [x] Datumsgrenzen einschließlich Monatsende, Sommerzeit, laufender Termine und fehlender Endzeit prüfen.
+- [x] Fehlerhafte Antworten, Netzwerkausfälle und erfolgreiche Antworten ohne Termine prüfen.
+- [x] Angezeigte Termine für beide Städte mit der offiziellen Quelle vergleichen.
+- [x] Mobile Darstellung und Tastaturbedienung prüfen.
+- [ ] Ausgelieferte Website einschließlich JSON-Datei und Quellenlinks unter dem Pages-Projektpfad prüfen (lokales unverändertes Pages-Paket bestanden; erneute öffentliche Prüfung aktuell durch Umgebungsproxy blockiert).
 
 **Abnahme:** Relevante Tests bestehen. Einschränkungen der Quelle und gegebenenfalls nicht prüfbare Fälle sind dokumentiert.
 
+**Stand 17.11.2026:** 89 Python-Tests einschließlich 12 Chromium-Browserprüfungen und 19 JavaScript-Tests bestanden, keine Skips. Live-Quellenprobe und isolierter Vollimport erfolgreich; alle sechs Datensätze fachlich identisch. Unverändertes Pages-Paket unter dem Projektpfad ohne JSON-Mocks geprüft: HTTP 200, Stadtfilter 6/5/1, offizielle Links, mobile Breiten ohne Überlauf, keine JavaScript-Fehler. Aktueller öffentlicher Direktabruf durch Proxy CONNECT 403 blockiert; diese erneute Live-Prüfung bleibt offen. [Prüfbericht](docs/phase-5-pruefung.md).
+
 ### 6. Dokumentieren und erste Version veröffentlichen
 
-- [ ] README um lokalen Start, Datenabruf, Tests und Deployment ergänzen.
-- [ ] Datenquelle, Aktualisierungsrhythmus, Archivgrenze und Fehlerverhalten dokumentieren.
-- [ ] Erforderliche GitHub-Pages-Einstellungen und gegebenenfalls externe Voraussetzungen beschreiben.
+- [x] README um lokalen Start, Datenabruf, Tests und Deployment ergänzen.
+- [x] Datenquelle, Aktualisierungsrhythmus, Archivgrenze und Fehlerverhalten dokumentieren.
+- [x] Erforderliche GitHub-Pages-Einstellungen und gegebenenfalls externe Voraussetzungen beschreiben.
 - [x] Erste Version veröffentlichen und die tatsächlich veröffentlichte Seite prüfen (GitHub Pages, 17.11.2026).
-- [ ] Verifizierte Ergebnisse und verbleibende Einschränkungen festhalten.
+- [x] Verifizierte Ergebnisse und verbleibende Einschränkungen festhalten.
 
 **Fertig, wenn:** Beide Städte korrekt dargestellt werden, die automatische Aktualisierung und Veröffentlichung funktionieren, der Datenstatus erkennbar ist und der Entwicklungsablauf dokumentiert ist.
+
+**Abschluss 17.11.2026:** README und Betriebsdokumentation mit lokalen Befehlen, Tagesrhythmus, Pages-Einstellungen, Archiv- und Fehlerregeln geprüft und ergänzt. Erste Veröffentlichung bereits erfolgt; manueller Aktualisierungslauf `44111310168` einschließlich Archivpersistierung und Deployment in dieser Prüfung über GitHub erneut als erfolgreich bestätigt. Direkter Live-Abruf aktuell durch Umgebungsproxy blockiert; frühere Live-Verifikation bleibt separat dokumentiert. [Abschlussbericht und Grenzen](docs/phase-6-abschluss.md).
 
 ## Fortschritt, Entscheidungen und Blocker
 
@@ -109,4 +113,4 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 - Phase 2: manueller Import, JSON-Validierung, Dublettenerkennung, Archiv und separater Abrufstatus implementiert und geprüft. Erster Archivaufbau ab 17.11.2026; kein vollständiger anfänglicher Rückblickmonat.
 - Phase 3: Website implementiert und lokal geprüft.
 - Phase 4: täglicher und manueller Datenabruf, automatische Archivpersistierung und Pages-Deployment von `main` eingerichtet; Ablauf und Nachweise siehe Deployment-Dokumentation.
-- Phase 5–6: verbleibende Gesamtvalidierung und Abschlussdokumentation offen. Die Nutzungsgrundlage vor öffentlichem Betrieb bleibt zu klären.
+- Phase 5–6: parallel bearbeitet; Gesamtprüfung und Betriebsdokumentation ergänzt. Erfolgreiches bestehendes Deployment über GitHub erneut bestätigt; direkter Pages-Abruf in der aktuellen Umgebung durch Proxy-403 blockiert. Die Nutzungsgrundlage bleibt offen. Siehe [Phase 5](docs/phase-5-pruefung.md) und [Phase 6](docs/phase-6-abschluss.md).

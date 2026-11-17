@@ -83,11 +83,38 @@ Ein zusätzlicher Build-Schritt ist für die statische Website nicht nötig.
 
 ## Veröffentlichung
 
+Öffentliche Website: https://alexwiel.github.io/Blutspenden-overview/
+
 Änderungen an Website oder Daten auf `main` werden nach erfolgreichen Tests über
-GitHub Actions veröffentlicht. Ein manueller Lauf ist ebenfalls möglich. Bei Zeitplan- und manuellen Aktualisierungsläufen werden neue Termine vor der
+GitHub Actions veröffentlicht. Ein manueller Lauf ist ebenfalls möglich. Der
+Tageslauf startet ab 06:17 Uhr
+Wiener Winterzeit beziehungsweise 07:17 Uhr Sommerzeit (05:17 UTC); GitHub kann
+ihn verzögern. Bei Zeitplan- und manuellen Aktualisierungsläufen werden neue
+Termine vor der
 Veröffentlichung abgerufen. Normale Code-Pushes veröffentlichen nur den gespeicherten
 Stand. Bei Quellfehlern bleiben gültige Termine erhalten; die Website zeigt den
 neuen Fehlerstatus an. Details: [GitHub Pages](docs/github-pages.md).
+
+Für die Einrichtung im Repository unter **Settings → Pages → Build and deployment**
+als Quelle **GitHub Actions** wählen. Die Umgebung `github-pages` muss Deployments
+von `main` erlauben; der Archivjob benötigt einen zulässigen Bot-Push auf `main`.
+Zusätzliche persönliche Token oder Secrets sind nicht nötig. Unter **Actions →
+Website auf GitHub Pages veröffentlichen → Run workflow** auf `main` aktualisiert
+`refresh_data=true` die Quelle; `false` veröffentlicht den gespeicherten Stand.
+
+## Prüfstand und Grenzen
+
+Die Gesamtprüfung und der Quellenvergleich sind im [Phase-5-Prüfbericht](docs/phase-5-pruefung.md)
+festgehalten. Der [Abschlussbericht](docs/phase-6-abschluss.md) unterscheidet die
+bestätigte Veröffentlichung von den Grenzen der aktuellen Netzwerkprüfung.
+Das Archiv beginnt am 17.11.2026; ein vollständiger anfänglicher Monatsrückblick
+ist nicht verfügbar. Verschwinden aus der Suche bedeutet „unklar“, keine bestätigte
+Absage. Ein fehlgeschlagener Abruf erhält gültige Termine, veröffentlicht den
+Fehlerstatus und markiert den Workflow als fehlgeschlagen. Bei Infrastrukturfehlern
+bleibt die bisherige Website erhalten; nach 36 Stunden warnt sie vor alten Daten.
+Der tägliche Zeitplan ist eingerichtet, seine erste zeitgesteuerte Ausführung ist
+noch nicht beobachtet. Manuelle Aktualisierung einschließlich Archiv-Commit und
+Deployment ist nachgewiesen.
 
 ## Dokumentation
 
@@ -95,6 +122,8 @@ neuen Fehlerstatus an. Details: [GitHub Pages](docs/github-pages.md).
 - [Quellenprüfung](docs/phase-1-datenquelle.md): offizielle Suche, Kalenderexport und Einschränkungen.
 - [Import und Datenformat](docs/phase-2-import.md): Speicherung, Fehlerstatus, Zeitzonen und Archivgrenze.
 - [Website](docs/phase-3-website.md): Darstellung, Datenzustände und Browserprüfungen.
+- [Betrieb und Deployment](docs/github-pages.md): Einstellungen, Rechte und Fehlerbehandlung.
+- [Gesamtprüfung](docs/phase-5-pruefung.md) und [Abschluss](docs/phase-6-abschluss.md).
 - [Hinweise für Coding-Agenten](AGENTS.md).
 
 Die Nutzungsgrundlage für eine öffentliche Weiterveröffentlichung der Quelldaten
