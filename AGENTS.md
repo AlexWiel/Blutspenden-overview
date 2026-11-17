@@ -5,11 +5,12 @@
 Das Projekt soll eine statische GitHub-Pages-Website für Blutspendetermine des
 Österreichischen Roten Kreuzes in Klagenfurt am Wörthersee und Tamsweg bereitstellen.
 Angezeigt werden sollen kommende Termine und beendete Termine aus einem rollierenden
-Kalendermonat. Die genaue Monatsgrenze ist noch festzulegen und zu testen.
+Kalendermonat. Die Monatsgrenze ist der gleiche Kalendertag des Vormonats ab lokaler Mitternacht,
+bei kürzerem Vormonat auf dessen letzten Tag gekürzt.
 
-Aktuell sind die Quellenrecherche und ein ausführbares Prüfskript vorhanden.
-Website, produktiver Import, JSON-Datenbestand, Archiv und Deployment sind noch
-nicht implementiert. `PLAN.md` beschreibt die Phasen und ihren Fortschritt;
+Quellenrecherche, manueller Datenimport, validierter JSON-Bestand und lokales
+Archiv sind implementiert. Website und Deployment sind noch nicht implementiert.
+`PLAN.md` beschreibt die Phasen und ihren Fortschritt;
 `docs/phase-1-datenquelle.md` enthält die belegten Erkenntnisse zur Quelle.
 Geplante Komponenten nicht als bereits vorhanden beschreiben.
 
@@ -20,7 +21,11 @@ Geplante Komponenten nicht als bereits vorhanden beschreiben.
 | `README.md` | Kurze Projektbeschreibung |
 | `PLAN.md` | Aufgaben, Abnahmekriterien, Entscheidungen und offene Punkte |
 | `docs/phase-1-datenquelle.md` | Quellenprüfung, Beispieltermine und bekannte Grenzen |
-| `scripts/probe_source.py` | Manueller, lesender Live-Check der öffentlichen Quelle |
+| `scripts/probe_source.py` | Manueller Phase-1-Live-Check der öffentlichen Quelle |
+| `blutspenden/` | Quellabruf, ICS-Normalisierung, Archiv und CLI |
+| `tests/` | Offline-Tests mit `unittest` |
+| `data/appointments.json`, `data/status.json` | Erzeugter Terminbestand und separater Abrufstatus |
+| `docs/phase-2-import.md` | Datenformat, Bedienung und Fehler-/Archivregeln |
 | `.gitignore` | Vorlage mit Jekyll-/GitHub-Pages-Einträgen |
 
 Die `.gitignore` allein belegt keinen Jekyll- oder Ruby-Stack. Es gibt derzeit
@@ -30,11 +35,13 @@ Lockfile und keine CI-Konfiguration unter `.github/workflows/`.
 ## Tech-Stack
 
 - Vorhanden: Python 3 mit ausschließlich Standardbibliothek, insbesondere
-  `urllib.request`, `HTMLParser`, `json` und `zoneinfo`.
+  `urllib.request`, `HTMLParser`, `json`, `zoneinfo` und `unittest`.
+- Die CLI verwendet `fcntl` für die Schreibsperre und setzt Linux/Unix voraus.
 - `zoneinfo` setzt Python 3.9 oder neuer sowie verfügbare IANA-Zeitzonendaten
   für `Europe/Vienna` voraus. Eine Python-Version ist im Repository nicht gepinnt.
-- Geplant: HTML, CSS und JavaScript ohne Framework; ein Python-Importer erzeugt
-  JSON, GitHub Actions aktualisiert und veröffentlicht auf GitHub Pages.
+- Geplant: HTML, CSS und JavaScript ohne Framework; der vorhandene Python-Importer liefert
+  JSON. Automatische Aktualisierung und Veröffentlichung über GitHub Actions
+  sind noch geplant.
 - Zusätzliche Frameworks oder Paketmanager nur einführen, wenn die konkrete
   Aufgabe sie benötigt. Bei neuen Abhängigkeiten Installation dokumentieren.
 
@@ -43,32 +50,38 @@ Lockfile und keine CI-Konfiguration unter `.github/workflows/`.
 Alle folgenden Befehle im Repository-Hauptverzeichnis ausführen.
 
 ```sh
+python3 -m blutspenden --output-dir data
+python3 -m unittest discover -s tests -v
+```
+
+Der erste Befehl ruft beide Städte vollständig ab und schreibt erst nach erfolgreicher
+Validierung den Terminbestand. Er benötigt HTTPS-Zugriff auf `termine.blut.at`.
+`--output-dir` erlaubt ein separates Verzeichnis für manuelle Prüfungen.
+Der zweite Befehl führt die Offline-Suite ohne Netzwerkanfragen aus. Sie prüft
+Parser, Pagination und HTTP-Fehler, Archivierung, Monats-/Sommerzeitgrenzen,
+Dubletten und den Schutz gültiger Daten bei Abruf- oder Schreibfehlern.
+
+```sh
 python3 scripts/probe_source.py
 ```
 
-Das ist der einzige vorhandene funktionale Prüfaufruf. Er benötigt HTTPS-Zugriff
-auf `termine.blut.at`, verwendet vorhandene Proxy- und TLS-Einstellungen und gibt
-einen JSON-Bericht auf stdout aus. Er vergleicht für jede Stadt eine Suchkarte mit
-Detailseite und Einzeltermin-ICS und prüft die Ablehnung einer historischen Suche.
-Er reserviert keine Termine und schreibt keinen Datenbestand.
-
-Exit-Code 0 bedeutet, dass diese Stichproben und das erwartete Quellenverhalten
-geprüft wurden. Netzwerkfehler, geändertes HTML, fehlende zukünftige Stichproben
-oder veränderte Validierung können den Check fehlschlagen lassen. Eine Stadt ohne
-zukünftigen Termin ist nicht automatisch ein Anwendungsfehler. Der Check ist weder
-ein vollständiger Import noch ein Ersatz für eine lokale automatisierte Testsuite.
+Das ist der ursprüngliche manuelle Phase-1-Nachweis, kein vollständiger Importer.
+Er benötigt Live-Zugriff und kann bei fehlenden zukünftigen Stichproben oder
+verändertem Quellenverhalten fehlschlagen. Ein solcher Fehler ist nicht automatisch
+ein Anwendungsfehler. Details zu den Prüfgrenzen stehen im Quellenbericht.
 
 ```sh
 git diff --check
 ```
 
 Diesen lokalen Check für Whitespace-Fehler vor Abschluss von Änderungen verwenden.
-Es gibt derzeit **keinen Build-, Entwicklungsserver-, Lint- oder Unit-Test-Befehl**
-und keinen konfigurierten Test-Runner. Keine erfundenen `npm`, `pytest`, Bundler-
-oder Deployment-Befehle ausführen oder als bestehende Projektbefehle dokumentieren.
-Reine Dokumentationsänderungen erfordern keinen erneuten Live-Abruf. Bei Änderungen
-am Prüfskript den relevanten Live-Check ausführen, sofern der Netzwerkzugriff besteht,
-und Ergebnis oder konkreten Blocker berichten.
+Es gibt derzeit keinen Website-Build, Entwicklungsserver, Linter oder Deployment-
+Befehl. Der vorhandene Test-Runner ist `unittest`; kein `pytest`, `npm` oder Bundler
+ist eingerichtet. Reine Dokumentationsänderungen erfordern keinen Live-Abruf.
+Bei Änderungen am Importer die relevanten Offline-Tests ausführen und bei Änderungen
+an Quellabruf oder Kalendernormalisierung zusätzlich einen Live-Import, sofern der
+Netzwerkzugriff besteht. Ergebnis oder konkreten Blocker berichten. Für Fehlerfälle
+Mock-Antworten verwenden; die öffentliche Quelle nicht absichtlich überlasten.
 
 ## Regeln für Termindaten und weitere Implementierung
 
@@ -80,14 +93,17 @@ und Ergebnis oder konkreten Blocker berichten.
   Ergebnisse getrennt behandeln. Letzten gültigen Datenstand bei Fehlern erhalten.
 - Klagenfurt und Klagenfurt am Wörthersee normalisieren; Veranstaltungsort und
   Bundesland prüfen. Pagination und mehrere Zeitfenster müssen beim produktiven
-  Import berücksichtigt werden; das Prüfskript deckt diese nicht vollständig ab.
+  Import berücksichtigt werden; der Phase-1-Probecheck deckt sie nicht vollständig ab.
 - `Europe/Vienna` einschließlich Sommerzeit verwenden. Beobachtete ICS-Zeiten
   haben weder `TZID` noch `Z` am Ereignisfeld; nicht pauschal als UTC interpretieren.
 - `UID` und Quellen-URL bewahren; dauerhafte ID-Stabilität ist nicht garantiert.
   `DTSTAMP` nicht als zuverlässigen inhaltlichen Änderungszeitpunkt verwenden.
 - Historische Suche wird laut Quellenprüfung serverseitig abgelehnt. Ein Archiv
-  muss ab dem ersten Import entstehen; vollständige anfängliche Historie ist nicht
-  nachgewiesen. Verschwundene Einträge sind keine bestätigten Absagen.
+  wächst ab dem ersten Import; vollständige anfängliche Historie ist nicht
+  nachgewiesen. Verschwundene Einträge erhalten `verification_status=unklar`;
+  explizite Absagen haben Vorrang (`abgesagt`). Die offiziellen Prüflinks
+  `verification_url` und `verification_search_url` für die manuelle Prüfung
+  beibehalten. Der Quellstatus wird dadurch nicht überschrieben.
 - Die Nutzungsgrundlage für öffentliche Weiterverwendung ist vor öffentlichem
   Betrieb zu klären; das verlinkte Impressum enthält eine Beschränkung. Details
   stehen im Quellenbericht. Keine Kontaktaufnahme ohne entsprechenden Auftrag.

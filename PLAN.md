@@ -6,12 +6,12 @@ Eine statische Website auf GitHub Pages zeigt aktuelle und kommende Blutspendete
 
 ## Annahmen und technische Richtung
 
-- „Im letzten Monat“ bezeichnet einen rollierenden Kalendermonat bis heute, nicht den vorherigen Kalendermonat. Die genaue Monatsgrenze wird bei der Umsetzung festgelegt und getestet.
+- „Im letzten Monat“ bezeichnet einen rollierenden Kalendermonat bis heute, nicht den vorherigen Kalendermonat. Die Grenze ist der gleiche Kalendertag des Vormonats ab 00:00 Uhr in `Europe/Vienna`, bei kürzerem Vormonat auf dessen letzten Tag gekürzt (implementiert und getestet).
 - Gefiltert wird anhand des Veranstaltungsorts innerhalb der beiden Städte; Termine in Nachbargemeinden gehören zunächst nicht zum Umfang.
 - Für Anzeige und Datumsberechnung gilt `Europe/Vienna`, einschließlich Sommerzeit.
 - Die Website verwendet HTML, CSS und JavaScript ohne Framework. Ein Python-Skript erzeugt die Termindaten als JSON.
 - GitHub Actions aktualisiert die Daten täglich und auf manuellen Wunsch und veröffentlicht die Seite auf GitHub Pages.
-- Die konkrete Abrufmethode wird erst nach Prüfung der offiziellen Datenquelle gewählt.
+- Die Abrufmethode ist öffentliche HTML-Suche mit Pagination und offiziell verlinkten Einzeltermin-ICS; siehe Quellenbericht.
 
 ## Vorgehen
 
@@ -33,18 +33,20 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 
 ### 2. Termine abrufen und speichern
 
-- [ ] Datenformat für Termine und Aktualisierungsstatus definieren.
-- [ ] Python-Abrufskript mit Zeitlimits, verständlichen Fehlern und schonender Abruffrequenz erstellen.
-- [ ] Stadtfilter, Zeitzone und Datumsnormalisierung implementieren.
-- [ ] Doppelte Einträge erkennen und Änderungen vorhandenen Terminen zuordnen.
-- [ ] Vergangene Termine mindestens für den Rückblickzeitraum aufbewahren, auch wenn sie aus der offiziellen Suche verschwinden.
-- [ ] Absagen und verschwundene Einträge gemäß den tatsächlich verfügbaren Quellinformationen behandeln; Verschwinden allein nicht als bestätigte Absage werten.
-- [ ] Neue Daten vor dem Ersetzen des letzten gültigen Datenstands validieren.
-- [ ] Fehlgeschlagene Abrufe von erfolgreichen Abrufen ohne Termine unterscheiden.
+- [x] Datenformat für Termine und Aktualisierungsstatus definieren.
+- [x] Python-Abrufskript mit Zeitlimits, verständlichen Fehlern und schonender Abruffrequenz erstellen.
+- [x] Stadtfilter, Zeitzone und Datumsnormalisierung implementieren.
+- [x] Doppelte Einträge erkennen und Änderungen vorhandenen Terminen zuordnen.
+- [x] Vergangene Termine mindestens für den Rückblickzeitraum aufbewahren, auch wenn sie aus der offiziellen Suche verschwinden.
+- [x] Absagen und verschwundene Einträge gemäß den tatsächlich verfügbaren Quellinformationen behandeln; Verschwinden allein nicht als bestätigte Absage werten.
+- [x] Neue Daten vor dem Ersetzen des letzten gültigen Datenstands validieren.
+- [x] Fehlgeschlagene Abrufe von erfolgreichen Abrufen ohne Termine unterscheiden.
 
 **Abnahme:** Gültige JSON-Daten für beide Städte liegen vor. Wiederholte Abrufe erzeugen keine Dubletten und zerstören bei Fehlern keine gültigen Daten.
 
 **Grenze:** Ein vollständiger Rückblick beim ersten Start ist nur möglich, wenn die Quelle historische Termine bereitstellt. Andernfalls wächst das Archiv ab dem ersten erfolgreichen Abruf.
+
+**Stand 17.11.2026:** Phase 2 parallel implementiert. `python3 -m blutspenden --output-dir data` zweimal erfolgreich: jeweils fünf Klagenfurter und ein Tamsweger Zeitfenster, sechs eindeutige IDs, keine Dubletten oder vorgetäuschten fachlichen Änderungen. `python3 -m unittest discover -s tests -v`: 65 Tests bestanden. Datenformat, Fehlerstatus und Archivregeln: [Phase-2-Dokumentation](docs/phase-2-import.md). Website und automatische Veröffentlichung bleiben offen. Ergänzung: Prüfstatus und manuelle Prüflinks implementiert, 70 Offline-Tests bestanden.
 
 ### 3. Übersichtliche Website erstellen
 
@@ -54,6 +56,7 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 - [ ] Beendete Termine im Rückblickzeitraum getrennt anzeigen.
 - [ ] Datum, Uhrzeit, Veranstaltungsort, Adresse und offiziellen Quellenlink lesbar darstellen.
 - [ ] Letzte erfolgreiche Aktualisierung sowie Hinweise auf veraltete Daten, Ladefehler und leere Trefferlisten anzeigen.
+- [ ] Prüfstatus „unklar“ für verschwundene Termine samt Link zur offiziellen Detailseite und alternativer Stadtsuche anzeigen; explizite Absagen beibehalten.
 - [ ] Unabhängige Übersicht klar kennzeichnen und auf das Rote Kreuz als maßgebliche Quelle verweisen.
 - [ ] Tastaturbedienung, verständliche Beschriftungen und ausreichende Kontraste berücksichtigen.
 
@@ -96,4 +99,5 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 - Ausgangslage: Das Repository enthält bisher nur README und `.gitignore`; Anwendung, Datenabruf und Workflows müssen erstellt werden.
 - Phase 1: Recherche und technische Abnahme durchgeführt; beide Städte erfolgreich abgerufen. Offene Nutzungsgrundlage und Quellenlimits siehe [Rechercheprotokoll](docs/phase-1-datenquelle.md).
 - `termine.blut.at` ist inzwischen erreichbar und laut aktuellem Umgebungsstatus freigegeben. Bei dieser Recherche wurde keine Umgebungskonfiguration geändert und keine Umgebung veröffentlicht.
-- Anwendung und Datenabruf (Phase 2–6): noch nicht begonnen.
+- Phase 2: manueller Import, JSON-Validierung, Dublettenerkennung, Archiv und separater Abrufstatus implementiert und geprüft. Erster Archivaufbau ab 17.11.2026; kein vollständiger anfänglicher Rückblickmonat.
+- Phase 3–6: Website, automatische Aktualisierung und Veröffentlichung noch offen. Die Nutzungsgrundlage vor öffentlichem Betrieb bleibt zu klären.
