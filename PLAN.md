@@ -29,6 +29,8 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 
 **Abnahme:** Eine geeignete Quelle und der Abruf für beide Städte sind nachgewiesen. Fehlende historische Daten sind ausdrücklich dokumentiert.
 
+**Stand 17.11.2026:** Technische Quellenrecherche und Prüfung der Abrufregeln parallel begonnen. Der Cloud-Proxy blockiert die Recherche-Domains beim HTTPS-Tunnelaufbau (`CONNECT 403 Forbidden`). Es wurden keine Quelldaten empfangen; die Aufgaben bleiben offen und die Abnahme ist nicht erreicht. Abrufnachweis, Aufgabenstatus und Fortsetzung: [Phase-1-Recherche](docs/phase-1-datenquelle.md).
+
 ### 2. Termine abrufen und speichern
 
 - [ ] Datenformat für Termine und Aktualisierungsstatus definieren.
@@ -92,5 +94,6 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 ## Fortschritt, Entscheidungen und Blocker
 
 - Ausgangslage: Das Repository enthält bisher nur README und `.gitignore`; Anwendung, Datenabruf und Workflows müssen erstellt werden.
-- Noch nicht geprüft: offizielle Datenquelle, Verfügbarkeit historischer Termine und technische Abrufmöglichkeiten.
-- Umsetzung: noch nicht begonnen.
+- Phase 1: parallel untersucht, aber durch fehlende Netzwerkfreigabe blockiert; offizielle Datenquelle, historische Termine, Nutzungsbedingungen und Abrufmöglichkeiten noch nicht verifiziert. Siehe [Rechercheprotokoll](docs/phase-1-datenquelle.md).
+- Netzwerkentwurf für die drei Recherche-Domains mit und ohne `www` gespeichert. Erst nach Übernahme in den Umgebungseinstellungen und wirksamer Freigabe können die Abrufe erneut geprüft werden.
+- Anwendung und Datenabruf (Phase 2–6): noch nicht begonnen.
