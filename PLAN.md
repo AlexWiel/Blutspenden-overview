@@ -1,0 +1,106 @@
+# Projektplan: Blutspendetermine für Klagenfurt und Tamsweg
+
+## Ziel
+
+Eine statische Website auf GitHub Pages zeigt aktuelle und kommende Blutspendetermine des Österreichischen Roten Kreuzes für Klagenfurt am Wörthersee und Tamsweg sowie die im vergangenen Monat beendeten Termine.
+
+## Annahmen und technische Richtung
+
+- „Im letzten Monat“ bezeichnet einen rollierenden Kalendermonat bis heute, nicht den vorherigen Kalendermonat. Die Grenze ist der gleiche Kalendertag des Vormonats ab 00:00 Uhr in `Europe/Vienna`, bei kürzerem Vormonat auf dessen letzten Tag gekürzt (implementiert und getestet).
+- Gefiltert wird anhand des Veranstaltungsorts innerhalb der beiden Städte; Termine in Nachbargemeinden gehören zunächst nicht zum Umfang.
+- Für Anzeige und Datumsberechnung gilt `Europe/Vienna`, einschließlich Sommerzeit.
+- Die Website verwendet HTML, CSS und JavaScript ohne Framework. Ein Python-Skript erzeugt die Termindaten als JSON.
+- GitHub Actions aktualisiert die Daten täglich und auf manuellen Wunsch und veröffentlicht die Seite auf GitHub Pages.
+- Die Abrufmethode ist öffentliche HTML-Suche mit Pagination und offiziell verlinkten Einzeltermin-ICS; siehe Quellenbericht.
+
+## Vorgehen
+
+Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Prüfung abhaken. Erkenntnisse, Entscheidungen und konkrete Blocker unten dokumentieren. Bei einem Blocker unabhängige Aufgaben fortsetzen; fehlende oder fehlerhafte Quelldaten niemals durch erfundene Termine ersetzen.
+
+### 1. Offizielle Datenquelle prüfen
+
+- [x] Offizielle Terminsuche des Österreichischen Roten Kreuzes für beide Städte ermitteln.
+- [x] Dokumentierte Schnittstelle, Kalenderexport oder geeignete öffentliche Terminseiten untersuchen.
+- [x] Nutzungsbedingungen, Abrufregeln und angemessene Abruffrequenz prüfen (Weiterverwendungsbeschränkung gefunden; Nutzungsgrundlage vor Veröffentlichung klären).
+- [x] Verfügbarkeit von Datum, Beginn, Ende, Veranstaltungsort, Adresse, Quellenlink und stabiler Termin-ID prüfen (UID und Slug vorhanden; langfristige Stabilität nicht garantiert).
+- [x] Klären, wie Änderungen, Absagen und historische Termine erkennbar sind (Grenzen dokumentiert; keine bestätigte Absage-Stichprobe).
+- [x] Einen kleinen, reproduzierbaren Abruf für beide Städte durchführen und Ergebnisse mit den offiziellen Einträgen vergleichen.
+- [x] Datenquelle, Abrufmethode und Grenzen dokumentieren.
+
+**Abnahme:** Eine technisch geeignete Quelle und der Abruf für beide Städte sind nachgewiesen. Fehlende historische Daten sind ausdrücklich dokumentiert. Die Erlaubnis zur öffentlichen Weiterverwendung ist damit noch nicht nachgewiesen.
+
+**Stand 17.11.2026, nach Veröffentlichung:** Phase 1 parallel durchgeführt. Offizielle Suche unter `termine.blut.at` und Einzeltermin-ICS sind erreichbar. Je eine Stichprobe für Klagenfurt und Tamsweg erfolgreich mit Karte, Detailseite und Kalender verglichen; versionierter Nachweis: `python3 scripts/probe_source.py` (Exit-Code 0). Historische Suche wird serverseitig abgelehnt; Archiv ab erstem Import erforderlich. Das verlinkte Impressum schränkt die Weiterverwendung ein; vor öffentlichem Betrieb klären. Belege und technische Grenzen: [Phase-1-Recherche](docs/phase-1-datenquelle.md).
+
+### 2. Termine abrufen und speichern
+
+- [x] Datenformat für Termine und Aktualisierungsstatus definieren.
+- [x] Python-Abrufskript mit Zeitlimits, verständlichen Fehlern und schonender Abruffrequenz erstellen.
+- [x] Stadtfilter, Zeitzone und Datumsnormalisierung implementieren.
+- [x] Doppelte Einträge erkennen und Änderungen vorhandenen Terminen zuordnen.
+- [x] Vergangene Termine mindestens für den Rückblickzeitraum aufbewahren, auch wenn sie aus der offiziellen Suche verschwinden.
+- [x] Absagen und verschwundene Einträge gemäß den tatsächlich verfügbaren Quellinformationen behandeln; Verschwinden allein nicht als bestätigte Absage werten.
+- [x] Neue Daten vor dem Ersetzen des letzten gültigen Datenstands validieren.
+- [x] Fehlgeschlagene Abrufe von erfolgreichen Abrufen ohne Termine unterscheiden.
+
+**Abnahme:** Gültige JSON-Daten für beide Städte liegen vor. Wiederholte Abrufe erzeugen keine Dubletten und zerstören bei Fehlern keine gültigen Daten.
+
+**Grenze:** Ein vollständiger Rückblick beim ersten Start ist nur möglich, wenn die Quelle historische Termine bereitstellt. Andernfalls wächst das Archiv ab dem ersten erfolgreichen Abruf.
+
+**Stand 17.11.2026:** Phase 2 parallel implementiert. `python3 -m blutspenden --output-dir data` zweimal erfolgreich: jeweils fünf Klagenfurter und ein Tamsweger Zeitfenster, sechs eindeutige IDs, keine Dubletten oder vorgetäuschten fachlichen Änderungen. `python3 -m unittest discover -s tests -v`: 65 Tests bestanden. Datenformat, Fehlerstatus und Archivregeln: [Phase-2-Dokumentation](docs/phase-2-import.md). Website und automatische Veröffentlichung bleiben offen. Ergänzung: Prüfstatus und manuelle Prüflinks implementiert, 70 Offline-Tests bestanden.
+
+### 3. Übersichtliche Website erstellen
+
+- [x] Responsive Grundstruktur mit HTML, CSS und JavaScript erstellen.
+- [x] Filter für „Beide Städte“, „Klagenfurt“ und „Tamsweg“ ergänzen.
+- [x] Kommende und laufende Termine chronologisch darstellen und den nächsten Termin hervorheben.
+- [x] Beendete Termine im Rückblickzeitraum getrennt anzeigen.
+- [x] Datum, Uhrzeit, Veranstaltungsort, Adresse und offiziellen Quellenlink lesbar darstellen.
+- [x] Letzte erfolgreiche Aktualisierung sowie Hinweise auf veraltete Daten, Ladefehler und leere Trefferlisten anzeigen.
+- [x] Prüfstatus „unklar“ für verschwundene Termine samt Link zur offiziellen Detailseite und alternativer Stadtsuche anzeigen; explizite Absagen beibehalten.
+- [x] Unabhängige Übersicht klar kennzeichnen und auf das Rote Kreuz als maßgebliche Quelle verweisen.
+- [x] Tastaturbedienung, verständliche Beschriftungen und ausreichende Kontraste berücksichtigen.
+
+**Abnahme:** Beide Städte und Terminbereiche sind auf Smartphone und Desktop verständlich nutzbar; alle relevanten Datenzustände werden korrekt angezeigt.
+
+**Stand 17.11.2026:** Phase 3 parallel umgesetzt: statische Website ohne Build, Filter, laufende/kommende Termine, Monatsrückblick, sichere Prüflinks und Fehler-/Veraltungshinweise. 19 JavaScript-Tests und 11 Chromium-Browserprüfungen bestanden (keine übersprungen); mobile Breiten 320/390/768 px, Tastatur und Pages-Unterpfad geprüft. Anzeige des echten gespeicherten Bestands: 6 Termine (5 Klagenfurt, 1 Tamsweg). Weitere Details: [Phase-3-Dokumentation](docs/phase-3-website.md). Keine Veröffentlichung durchgeführt.
+
+### 4. Aktualisierung und GitHub Pages automatisieren
+
+- [ ] GitHub Actions für täglichen sowie manuellen Datenabruf einrichten.
+- [ ] Persistierung des Archivs über Workflow-Läufe hinweg festlegen und umsetzen.
+- [ ] Validierung und Veröffentlichung über GitHub Pages einrichten.
+- [ ] Bei Abruffehlern den letzten gültigen Terminbestand erhalten und den Fehler sichtbar machen.
+- [ ] Erforderliche Workflow-Berechtigungen auf das notwendige Maß begrenzen.
+- [ ] Pfade unter dem GitHub-Pages-Projektpfad `/Blutspenden-overview/` prüfen.
+
+**Abnahme:** Manueller Workflow und Veröffentlichung funktionieren; Aktualisierungsfehler werden nicht als „keine Termine“ ausgegeben. Die tägliche Ausführung ist konfiguriert.
+
+### 5. Funktion und Datenqualität prüfen
+
+- [ ] Tests für Stadtfilter, Dubletten, Aktualisierungen und Archivaufbewahrung ausführen.
+- [ ] Datumsgrenzen einschließlich Monatsende, Sommerzeit, laufender Termine und fehlender Endzeit prüfen.
+- [ ] Fehlerhafte Antworten, Netzwerkausfälle und erfolgreiche Antworten ohne Termine prüfen.
+- [ ] Angezeigte Termine für beide Städte mit der offiziellen Quelle vergleichen.
+- [ ] Mobile Darstellung und Tastaturbedienung prüfen.
+- [ ] Ausgelieferte Website einschließlich JSON-Datei und Quellenlinks unter dem Pages-Projektpfad prüfen.
+
+**Abnahme:** Relevante Tests bestehen. Einschränkungen der Quelle und gegebenenfalls nicht prüfbare Fälle sind dokumentiert.
+
+### 6. Dokumentieren und erste Version veröffentlichen
+
+- [ ] README um lokalen Start, Datenabruf, Tests und Deployment ergänzen.
+- [ ] Datenquelle, Aktualisierungsrhythmus, Archivgrenze und Fehlerverhalten dokumentieren.
+- [ ] Erforderliche GitHub-Pages-Einstellungen und gegebenenfalls externe Voraussetzungen beschreiben.
+- [ ] Erste Version veröffentlichen und die tatsächlich veröffentlichte Seite prüfen.
+- [ ] Verifizierte Ergebnisse und verbleibende Einschränkungen festhalten.
+
+**Fertig, wenn:** Beide Städte korrekt dargestellt werden, die automatische Aktualisierung und Veröffentlichung funktionieren, der Datenstatus erkennbar ist und der Entwicklungsablauf dokumentiert ist.
+
+## Fortschritt, Entscheidungen und Blocker
+
+- Ausgangslage: Das Repository enthält bisher nur README und `.gitignore`; Anwendung, Datenabruf und Workflows müssen erstellt werden.
+- Phase 1: Recherche und technische Abnahme durchgeführt; beide Städte erfolgreich abgerufen. Offene Nutzungsgrundlage und Quellenlimits siehe [Rechercheprotokoll](docs/phase-1-datenquelle.md).
+- `termine.blut.at` ist inzwischen erreichbar und laut aktuellem Umgebungsstatus freigegeben. Bei dieser Recherche wurde keine Umgebungskonfiguration geändert und keine Umgebung veröffentlicht.
+- Phase 2: manueller Import, JSON-Validierung, Dublettenerkennung, Archiv und separater Abrufstatus implementiert und geprüft. Erster Archivaufbau ab 17.11.2026; kein vollständiger anfänglicher Rückblickmonat.
+- Phase 3: Website implementiert und lokal geprüft.
+- Phase 4–6: automatische Aktualisierung und Veröffentlichung noch offen. Die Nutzungsgrundlage vor öffentlichem Betrieb bleibt zu klären.

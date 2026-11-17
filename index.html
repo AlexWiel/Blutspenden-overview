@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="Blutspendetermine in Klagenfurt und Tamsweg: kommende Termine, aktueller Datenstand und Rückblick in einer unabhängigen Übersicht.">
+    <title>Blutspendetermine · Klagenfurt &amp; Tamsweg</title>
+    <link rel="stylesheet" href="./assets/styles.css">
+    <script type="module" src="./assets/app.js"></script>
+    <noscript><style>#loading-state { display: none !important; }</style></noscript>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="wordmark" href="./" aria-label="Blutspendetermine – zur Startseite">
+          <span class="wordmark-symbol" aria-hidden="true"></span>
+          <span>Blutspendetermine<span class="wordmark-region">Klagenfurt &amp; Tamsweg</span></span>
+        </a>
+        <a class="official-link" href="https://termine.blut.at/">Zur offiziellen Terminsuche <svg class="external-icon" aria-hidden="true" viewBox="0 0 16 16" width="12" height="12"><path d="M4 12 12 4M4 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+      </header>
+
+      <main id="main-content" tabindex="-1">
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span>Zwei Städte. Eine gute Sache.</p>
+            <h1 id="page-title">Blut spenden.<br><span>Gut geplant.</span></h1>
+            <p class="hero-description">Finde deinen nächsten Blutspendetermin in Klagenfurt oder Tamsweg – mit allen wichtigen Angaben auf einen Blick.</p>
+          </div>
+          <div class="hero-aside">
+            <p class="hero-aside-label">Dein Beitrag zählt.</p>
+            <p>Ein passender Termin ist der erste Schritt. Die verbindlichen Informationen findest du direkt beim Roten Kreuz.</p>
+            <a href="https://www.roteskreuz.at/blut/home">Mehr über die Blutspende <svg class="external-icon" aria-hidden="true" viewBox="0 0 16 16" width="12" height="12"><path d="M4 12 12 4M4 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+          </div>
+        </section>
+
+        <noscript>
+          <div class="notice notice-warning">
+            Diese Übersicht benötigt JavaScript zum Laden der Termine. Du findest alle Termine auch in der <a href="https://termine.blut.at/">offiziellen Terminsuche des Roten Kreuzes</a>.
+          </div>
+        </noscript>
+
+        <div id="loading-state" class="state-panel" role="status" aria-live="polite">
+          <span class="state-indicator" aria-hidden="true"></span>
+          <p>Termine werden geladen …</p>
+        </div>
+
+        <div id="error-state" class="state-panel error-panel" role="alert" hidden>
+          <h2>Die Termine konnten nicht geladen werden.</h2>
+          <p>Bitte versuche es erneut oder prüfe die Termine direkt beim Roten Kreuz.</p>
+          <div class="state-actions">
+            <button id="retry-button" class="button-primary" type="button">Erneut versuchen</button>
+            <a href="https://termine.blut.at/">Offizielle Terminsuche öffnen <svg class="external-icon" aria-hidden="true" viewBox="0 0 16 16" width="12" height="12"><path d="M4 12 12 4M4 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+          </div>
+        </div>
+
+        <div id="content" hidden>
+          <div class="overview-toolbar">
+            <fieldset class="city-filter">
+              <legend>Termine anzeigen für</legend>
+              <div class="filter-options">
+                <label><input type="radio" name="city" value="all" checked><span>Beide Städte</span></label>
+                <label><input type="radio" name="city" value="klagenfurt"><span>Klagenfurt</span></label>
+                <label><input type="radio" name="city" value="tamsweg"><span>Tamsweg</span></label>
+              </div>
+            </fieldset>
+            <div class="update-info">
+              <span class="update-label">Datenstand</span>
+              <p id="update-summary"></p>
+            </div>
+          </div>
+
+          <div id="notices" class="notices"></div>
+          <p id="results-summary" class="results-summary" role="status" aria-live="polite" aria-atomic="true"></p>
+
+          <section id="next-appointment" class="next-panel" aria-label="Nächster gelisteter Termin"></section>
+
+          <section class="appointments-section" aria-labelledby="upcoming-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Vorausplanen</p>
+                <h2 id="upcoming-heading">Kommende Termine</h2>
+              </div>
+              <p class="section-description">Kommende und laufende Blutspendeaktionen.</p>
+            </div>
+            <ul id="upcoming-list" class="appointment-grid" aria-labelledby="upcoming-heading"></ul>
+            <p id="upcoming-empty" class="empty-state" hidden>Für diese Auswahl sind derzeit keine kommenden Termine gespeichert.</p>
+          </section>
+
+          <section class="appointments-section history-section" aria-labelledby="past-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Zurückblicken</p>
+                <h2 id="past-heading">Vergangene Termine</h2>
+              </div>
+              <p id="history-range" class="section-description"></p>
+            </div>
+            <p id="history-note" class="history-note"></p>
+            <ul id="past-list" class="appointment-grid past-grid" aria-labelledby="past-heading"></ul>
+            <p id="past-empty" class="empty-state" hidden>Für diesen Zeitraum sind keine vergangenen Termine gespeichert.</p>
+          </section>
+        </div>
+      </main>
+
+      <footer class="site-footer">
+        <div>
+          <p class="footer-title">Eine unabhängige Übersicht.</p>
+          <p>Kein offizielles Angebot des Österreichischen Roten Kreuzes. Bitte prüfe deinen Termin vor der Anreise bei der offiziellen Quelle.</p>
+        </div>
+        <nav aria-label="Weiterführende Informationen">
+          <a href="https://termine.blut.at/">Termine beim Roten Kreuz <svg class="external-icon" aria-hidden="true" viewBox="0 0 16 16" width="12" height="12"><path d="M4 12 12 4M4 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+          <a href="https://www.roteskreuz.at/blut/home">Informationen zur Blutspende <svg class="external-icon" aria-hidden="true" viewBox="0 0 16 16" width="12" height="12"><path d="M4 12 12 4M4 4h8v8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        </nav>
+      </footer>
+    </div>
+  </body>
+</html>
