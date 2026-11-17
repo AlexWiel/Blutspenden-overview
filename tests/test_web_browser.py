@@ -45,8 +45,8 @@ class WebsiteBrowserTests(unittest.TestCase):
             executable_path=CHROMIUM, headless=True, args=["--no-sandbox"])
         cls.url = "http://127.0.0.1:{}/{}/".format(
             cls.server.server_port, ROOT.name)
-        cls.original = json.loads((ROOT / "data/appointments.json").read_text(encoding="utf-8"))
-        cls.original_status = json.loads((ROOT / "data/status.json").read_text(encoding="utf-8"))
+        cls.original = json.loads((ROOT / "tests/fixtures/web-appointments.json").read_text(encoding="utf-8"))
+        cls.original_status = json.loads((ROOT / "tests/fixtures/web-status.json").read_text(encoding="utf-8"))
 
     @classmethod
     def tearDownClass(cls):
@@ -147,6 +147,25 @@ class WebsiteBrowserTests(unittest.TestCase):
         expect(self.page.locator('input[name="city"][value="klagenfurt"]')).to_be_checked()
         expect(self.page.locator("#upcoming-list > li")).to_have_count(5)
         self.assertEqual(self.page.locator("#results-summary").get_attribute("aria-live"), "polite")
+
+    def test_requirements_link_is_visible_external_keyboard_and_mobile_accessible(self):
+        self.open()
+        self.assert_ready()
+        link = self.page.locator("#donation-requirements")
+        expect(link).to_have_attribute("href", "https://www.roteskreuz.at/blut/faq")
+        expect(link).to_contain_text("Voraussetzungen für eine Blutspende")
+        expect(link).to_contain_text("externer Link")
+        expect(self.page.locator(".hero #donation-requirements")).to_be_visible()
+        link.focus()
+        expect(link).to_be_focused()
+        self.assertEqual(link.evaluate("node => getComputedStyle(node).outlineStyle"), "solid")
+        for width in (320, 390, 768):
+            with self.subTest(width=width):
+                self.page.set_viewport_size({"width": width, "height": 844})
+                expect(link).to_be_visible()
+                self.assertGreaterEqual(link.bounding_box()["height"], 44)
+                self.assertTrue(self.page.evaluate(
+                    "document.documentElement.scrollWidth <= window.innerWidth"))
 
     def test_mobile_sizes_have_no_horizontal_overflow_and_filters_work(self):
         self.open()

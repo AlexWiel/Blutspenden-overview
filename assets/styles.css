@@ -55,6 +55,9 @@ ul { padding: 0; }
 h1 { margin-bottom: 22px; font-size: clamp(44px, 5.6vw, 70px); font-weight: 750; letter-spacing: -.065em; }
 h1 span { color: var(--accent); }
 .hero-description { max-width: 480px; margin-bottom: 0; color: var(--muted); font-size: 16px; line-height: 1.75; }
+.requirements-link { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: fit-content; max-width: 100%; min-height: 44px; margin-top: 23px; padding: 13px 17px; border: 1px solid var(--accent); border-radius: 9px; background: var(--accent-soft); font-size: 14px; line-height: 1.5; font-weight: 700; text-decoration: none; }
+.requirements-link:hover { background: #ead8df; }
+.requirements-source { display: block; margin-top: 3px; color: #753d4a; font-size: 11px; font-weight: 500; }
 .hero-aside { padding-left: 22px; padding-bottom: 4px; border-left: 2px solid var(--line); font-size: 13px; line-height: 1.8; color: var(--muted); }
 .hero-aside .hero-aside-label { color: var(--ink); font-weight: 700; font-size: 15px; margin-bottom: 6px; }
 .hero-aside p { margin-bottom: 10px; }
