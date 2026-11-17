@@ -126,3 +126,13 @@ python3 -m unittest discover -s tests -v
 
 Offen bleiben automatische Aktualisierung und Deployment (Phase 4) sowie die
 Nutzungsgrundlage vor öffentlicher Weiterveröffentlichung aus dem Quellenbericht.
+
+## Ergänzung: Spendevoraussetzungen
+
+Der obere Seitenbereich enthält jetzt einen gut sichtbaren externen Link
+„Voraussetzungen für eine Blutspende“ auf https://www.roteskreuz.at/blut/faq.
+Diese offizielle Seite wurde mit HTTP 200 und den tatsächlichen Informationen zu
+„Wer darf Blut spenden?“ geprüft. Es werden keine medizinischen Kriterien als
+lokale Liste kopiert. Die ergänzte Browserprüfung deckt Linkziel, Tastaturfokus,
+44-Pixel-Zielgröße und mobile Ansichten ab; insgesamt bestehen jetzt zwölf
+Browserprüfungen.

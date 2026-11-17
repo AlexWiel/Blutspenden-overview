@@ -4,7 +4,8 @@ GitHub-Pages-Übersicht über Blutspendetermine des Österreichischen Roten
 Kreuzes in Klagenfurt am Wörthersee und Tamsweg, einschließlich eines monatlichen
 Rückblicks. Datenimport, lokales Archiv und responsive Website sind implementiert.
 Die Website ist veröffentlicht: https://alexwiel.github.io/Blutspenden-overview/
-Ein täglicher automatischer Datenabruf ist noch nicht eingerichtet.
+Neue Termine werden täglich über GitHub Actions abgerufen, archiviert und
+anschließend veröffentlicht. Ein manueller Start ist ebenfalls möglich.
 
 ## Voraussetzungen und Datenimport
 
@@ -40,8 +41,10 @@ Alle Datumsangaben verwenden `Europe/Vienna`, unabhängig von der Browserzeitzon
 Die Anwendung verwendet relative Pfade und funktioniert auch unter dem
 GitHub-Pages-Projektpfad `/Blutspenden-overview/`.
 
-Die Anzeige eines gespeicherten Datenstands führt keinen neuen Quellabruf aus.
-Für neue Daten den manuellen Import ausführen. Die Seite ist als unabhängige
+Die Anzeige eines gespeicherten Datenstands führt selbst keinen neuen Quellabruf
+aus. Der tägliche Workflow läuft ab 05:17 UTC (Wien: 06:17 im Winter, 07:17 im
+Sommer). Für einen zusätzlichen Abruf in GitHub Actions den Workflow manuell mit
+aktivierter Option `refresh_data` starten; lokal ist der Import ebenfalls möglich. Die Seite ist als unabhängige
 Übersicht gekennzeichnet; die offiziellen Angaben sind maßgeblich.
 
 ## Prüfen
@@ -81,9 +84,10 @@ Ein zusätzlicher Build-Schritt ist für die statische Website nicht nötig.
 ## Veröffentlichung
 
 Änderungen an Website oder Daten auf `main` werden nach erfolgreichen Tests über
-GitHub Actions veröffentlicht. Ein manueller Lauf ist ebenfalls möglich. Dabei
-wird der gespeicherte Datenstand veröffentlicht; neue Termine werden noch nicht
-automatisch abgerufen. Details: [GitHub Pages](docs/github-pages.md).
+GitHub Actions veröffentlicht. Ein manueller Lauf ist ebenfalls möglich. Bei Zeitplan- und manuellen Aktualisierungsläufen werden neue Termine vor der
+Veröffentlichung abgerufen. Normale Code-Pushes veröffentlichen nur den gespeicherten
+Stand. Bei Quellfehlern bleiben gültige Termine erhalten; die Website zeigt den
+neuen Fehlerstatus an. Details: [GitHub Pages](docs/github-pages.md).
 
 ## Dokumentation
 

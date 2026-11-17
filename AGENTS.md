@@ -10,7 +10,7 @@ bei kürzerem Vormonat auf dessen letzten Tag gekürzt.
 
 Quellenrecherche, manueller Datenimport, validierter JSON-Bestand und lokales
 Archiv und statische Website sind implementiert. GitHub-Pages-Deployment von
-`main` ist eingerichtet. Ein täglicher automatischer Datenabruf fehlt noch.
+`main` ist eingerichtet, einschließlich täglichem und manuellem Datenabruf.
 `PLAN.md` beschreibt die Phasen und ihren Fortschritt;
 `docs/phase-1-datenquelle.md` enthält die belegten Erkenntnisse zur Quelle.
 Geplante Komponenten nicht als bereits vorhanden beschreiben.
@@ -50,7 +50,8 @@ Lockfile. Die Pages-CI liegt unter `.github/workflows/pages.yml`.
   Node.js 18+ führt die JavaScript-Tests ohne npm-Abhängigkeiten aus.
 - Optional für Browserprüfungen: Python Playwright und System-Chromium.
 - Der Python-Importer liefert JSON. GitHub Actions veröffentlicht den gespeicherten
-  Stand von `main`; täglicher Quellabruf und Archiv-Commit sind noch geplant.
+  Stand von `main`; Zeitplan- und manuelle Läufe aktualisieren vorher die Quelle
+  und speichern das Archiv per Bot-Commit. Push-Läufe veröffentlichen ohne Abruf.
 - Zusätzliche Frameworks oder Paketmanager nur einführen, wenn die konkrete
   Aufgabe sie benötigt. Bei neuen Abhängigkeiten Installation dokumentieren.
 
@@ -105,9 +106,15 @@ python3 -m blutspenden.build_site --output-dir /tmp/blutspenden-pages-site
 
 Das Ziel muss leer oder neu und außerhalb des Repositorys sein. Der Workflow
 veröffentlicht nur das Paket, niemals das gesamte Repository. Build-Job nur mit
-Leserechten; Pages-/OIDC-Schreibrechte auf den Deployment-Job begrenzen. Bestehende
+Leserechten; Pages-/OIDC-Schreibrechte auf den Deployment-Job und
+`contents: write` auf den Archiv-Refresh-Job begrenzen. Bestehende
 Branch-Beschränkungen der Pages-Umgebung erhalten. Reine Dokumentationsänderungen
-lösen keine Bereitstellung aus.
+lösen keine Bereitstellung aus. `scripts/persist_refresh.sh` darf ausschließlich
+die beiden JSON-Dateien committen; niemals Force-Push oder blindes Rebase eines
+Archivkonflikts einführen. Der gleiche Workflow muss den vom Refresh-Job
+ausgegebenen SHA veröffentlichen, weil Bot-Pushes keinen weiteren Workflow starten.
+Quellfehlerstatus mit erhaltenen Terminen veröffentlichen und den Lauf danach als
+fehlgeschlagen kennzeichnen.
 Bei Website-Änderungen JavaScript- und Browserprüfungen ausführen, insbesondere
 Datenfehler, mobile Ansichten, Tastatur und den Projekt-Unterpfad prüfen.
 Öffentliche Termindaten als untrusted behandeln: DOM über `textContent` erstellen,
@@ -156,3 +163,19 @@ Prüfung abhaken und relevante neue Erkenntnisse dort beziehungsweise im Quellen
 festhalten. Bei neuen Build-, Test- oder Startbefehlen diese Datei und die README
 aktualisieren. Bei späterem Pages-Deployment den Projektpfad
 `/Blutspenden-overview/` berücksichtigen.
+
+## Automatische Aktualisierung
+
+Der Workflow läuft täglich ab 05:17 UTC (06:17 Wien im Winter, 07:17 im Sommer).
+Manuelle Läufe aktualisieren standardmäßig ebenfalls Daten (`refresh_data=true`);
+mit `false` sowie bei normalen Code-Pushes wird nur der gespeicherte Stand deployt.
+`scripts/persist_refresh.sh` speichert ausschließlich die zwei JSON-Dateien auf
+`main`, ohne Force-Push und ohne fremde vorgemerkte Dateien zu committen. Bei einem
+konkurrierenden Remote-Commit schlägt das Speichern fehl; nicht blind überschreiben.
+GitHub-Token-Commits starten keinen Folgeworkflow, deshalb muss derselbe Lauf den
+exportierten Daten-Commit bauen und deployen. Bei Quellfehlern werden gültige alte
+Daten mit neuem Fehlerstatus veröffentlicht; ein separater Abschlussjob macht den
+Workflow rot. Fehlerfälle offline testen, nicht absichtlich auf der Live-Seite erzeugen.
+Browserfixtures unter `tests/fixtures/` sind feste Teststände und dürfen nicht
+unbesehen durch tägliche Produktdaten ersetzt werden. Beim Voraussetzungen-Link
+nur die offizielle Zielseite verlinken, keine eigene medizinische Liste pflegen.
