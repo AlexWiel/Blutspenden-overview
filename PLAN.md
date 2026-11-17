@@ -19,17 +19,17 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 
 ### 1. Offizielle Datenquelle prüfen
 
-- [ ] Offizielle Terminsuche des Österreichischen Roten Kreuzes für beide Städte ermitteln.
-- [ ] Dokumentierte Schnittstelle, Kalenderexport oder geeignete öffentliche Terminseiten untersuchen.
-- [ ] Nutzungsbedingungen, Abrufregeln und angemessene Abruffrequenz prüfen.
-- [ ] Verfügbarkeit von Datum, Beginn, Ende, Veranstaltungsort, Adresse, Quellenlink und stabiler Termin-ID prüfen.
-- [ ] Klären, wie Änderungen, Absagen und historische Termine erkennbar sind.
-- [ ] Einen kleinen, reproduzierbaren Abruf für beide Städte durchführen und Ergebnisse mit den offiziellen Einträgen vergleichen.
-- [ ] Datenquelle, Abrufmethode und Grenzen dokumentieren.
+- [x] Offizielle Terminsuche des Österreichischen Roten Kreuzes für beide Städte ermitteln.
+- [x] Dokumentierte Schnittstelle, Kalenderexport oder geeignete öffentliche Terminseiten untersuchen.
+- [x] Nutzungsbedingungen, Abrufregeln und angemessene Abruffrequenz prüfen (Weiterverwendungsbeschränkung gefunden; Nutzungsgrundlage vor Veröffentlichung klären).
+- [x] Verfügbarkeit von Datum, Beginn, Ende, Veranstaltungsort, Adresse, Quellenlink und stabiler Termin-ID prüfen (UID und Slug vorhanden; langfristige Stabilität nicht garantiert).
+- [x] Klären, wie Änderungen, Absagen und historische Termine erkennbar sind (Grenzen dokumentiert; keine bestätigte Absage-Stichprobe).
+- [x] Einen kleinen, reproduzierbaren Abruf für beide Städte durchführen und Ergebnisse mit den offiziellen Einträgen vergleichen.
+- [x] Datenquelle, Abrufmethode und Grenzen dokumentieren.
 
-**Abnahme:** Eine geeignete Quelle und der Abruf für beide Städte sind nachgewiesen. Fehlende historische Daten sind ausdrücklich dokumentiert.
+**Abnahme:** Eine technisch geeignete Quelle und der Abruf für beide Städte sind nachgewiesen. Fehlende historische Daten sind ausdrücklich dokumentiert. Die Erlaubnis zur öffentlichen Weiterverwendung ist damit noch nicht nachgewiesen.
 
-**Stand 17.11.2026:** Technische Quellenrecherche und Prüfung der Abrufregeln parallel begonnen. Der Cloud-Proxy blockiert die Recherche-Domains beim HTTPS-Tunnelaufbau (`CONNECT 403 Forbidden`). Es wurden keine Quelldaten empfangen; die Aufgaben bleiben offen und die Abnahme ist nicht erreicht. Abrufnachweis, Aufgabenstatus und Fortsetzung: [Phase-1-Recherche](docs/phase-1-datenquelle.md).
+**Stand 17.11.2026, nach Veröffentlichung:** Phase 1 parallel durchgeführt. Offizielle Suche unter `termine.blut.at` und Einzeltermin-ICS sind erreichbar. Je eine Stichprobe für Klagenfurt und Tamsweg erfolgreich mit Karte, Detailseite und Kalender verglichen; versionierter Nachweis: `python3 scripts/probe_source.py` (Exit-Code 0). Historische Suche wird serverseitig abgelehnt; Archiv ab erstem Import erforderlich. Das verlinkte Impressum schränkt die Weiterverwendung ein; vor öffentlichem Betrieb klären. Belege und technische Grenzen: [Phase-1-Recherche](docs/phase-1-datenquelle.md).
 
 ### 2. Termine abrufen und speichern
 
@@ -94,6 +94,6 @@ Die Phasen in dieser Reihenfolge bearbeiten. Aufgaben erst nach erfolgreicher Pr
 ## Fortschritt, Entscheidungen und Blocker
 
 - Ausgangslage: Das Repository enthält bisher nur README und `.gitignore`; Anwendung, Datenabruf und Workflows müssen erstellt werden.
-- Phase 1: parallel untersucht, aber durch fehlende Netzwerkfreigabe blockiert; offizielle Datenquelle, historische Termine, Nutzungsbedingungen und Abrufmöglichkeiten noch nicht verifiziert. Siehe [Rechercheprotokoll](docs/phase-1-datenquelle.md).
-- Netzwerkentwurf für die drei Recherche-Domains mit und ohne `www` gespeichert. Erst nach Übernahme in den Umgebungseinstellungen und wirksamer Freigabe können die Abrufe erneut geprüft werden.
+- Phase 1: Recherche und technische Abnahme durchgeführt; beide Städte erfolgreich abgerufen. Offene Nutzungsgrundlage und Quellenlimits siehe [Rechercheprotokoll](docs/phase-1-datenquelle.md).
+- `termine.blut.at` ist inzwischen erreichbar und laut aktuellem Umgebungsstatus freigegeben. Bei dieser Recherche wurde keine Umgebungskonfiguration geändert und keine Umgebung veröffentlicht.
 - Anwendung und Datenabruf (Phase 2–6): noch nicht begonnen.
