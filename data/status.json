@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "last_attempt": "2026-11-18T15:05:18.156783+01:00",
-  "last_successful_fetch": "2026-11-18T15:05:18.156783+01:00",
+  "last_attempt": "2026-11-19T15:28:25.354219+01:00",
+  "last_successful_fetch": "2026-11-19T15:28:25.354219+01:00",
   "state": "ok",
   "fetched_counts": {
-    "Klagenfurt am Wörthersee": 5,
+    "Klagenfurt am Wörthersee": 4,
     "Tamsweg": 1
   },
   "error": null
